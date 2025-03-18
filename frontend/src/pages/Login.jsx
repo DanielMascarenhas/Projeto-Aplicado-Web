@@ -2,7 +2,8 @@ import { Form, Link } from "react-router-dom";
 import Input from "../components/Input";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { BadgeCheck, CircleAlert } from "lucide-react";
+import { BadgeCheck } from "lucide-react";
+import { login } from "../http";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -14,39 +15,21 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:8080/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: email,
-          senha: senha,
-        }),
-      });
+      const response = await login({email, senha});
 
-      if (response.ok) {
-        setMensagemErro("");
-        toast.success("Login efetuado com sucesso!", {
+      if(!response.ok){
+        setMensagemErro("Email ou senha errados!");
+        toast.error("Erro ao logar!", {
           icon: <BadgeCheck className="stroke-blue-500" />,
-          className:
-            "border-1 border-blue-600 bg-white text-blue-600 font-bold rounded-sm",
+          className: "border-1 border-red-600 bg-white text-red-600 font-bold rounded-sm",
         });
       } else {
-        toast.error("Erro ao logar!", {
-          className: "border-1 border-red-600 bg-white text-red-600 font-bold  rounded-sm",
-        });
-        setMensagemErro("Email ou senha errados!");
+        setMensagemErro("");
       }
     } catch (error) {
-      toast.error(`Erro de rede: ${error.message}`, {
-        icon: <CircleAlert className="stroke-red-500" />,
-        className:
-          "border-1 border-red-600 bg-white text-red-600 font-bold rounded-sm",
-      });
+      setMensagemErro("Erro ao conectar com o servidor!");
     }
-
   }
-
-
 
   return (
     <section className="flex flex-col justify-center items-center h-screen bg-slate-100">
