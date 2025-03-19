@@ -1,11 +1,17 @@
 import { Form, Link } from "react-router-dom";
-import Input from "../components/Input";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { toast } from "react-toastify";
 import { BadgeCheck } from "lucide-react";
-import { login } from "../http";
+
+import AuthContext from "../store/authContext";
+
+import Input from "../components/Input";
+import { loginFunction } from "../http";
+
 
 export default function Login() {
+  const { login } = useContext(AuthContext);
+ 
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
 
@@ -15,7 +21,8 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      const response = await login({email, senha});
+      const response = await loginFunction({email, senha});
+      const dados = await response.json();
 
       if(!response.ok){
         setMensagemErro("Email ou senha errados!");
@@ -25,6 +32,7 @@ export default function Login() {
         });
       } else {
         setMensagemErro("");
+        login(dados);
       }
     } catch (error) {
       setMensagemErro("Erro ao conectar com o servidor!");

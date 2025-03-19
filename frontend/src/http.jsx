@@ -1,7 +1,13 @@
 import { toast } from "react-toastify";
 import { BadgeCheck, CircleAlert } from "lucide-react";
 
-export async function createAccount(bodyData) {
+
+/**
+ * 
+ * @param {*} bodyData - nome, email, senha
+ * @returns 
+ */
+export async function createAccountFunction(bodyData) {
   try {
     const response = await fetch("http://localhost:8080/api/auth/registro", {
       method: "POST",
@@ -26,7 +32,12 @@ export async function createAccount(bodyData) {
   }
 }
 
-export async function login(bodyData){
+/**
+ * 
+ * @param {*} bodyData -  email, senha
+ * @returns - Promise[id, nome, tipo, token]
+ */
+export async function loginFunction(bodyData){
     try {
         const response = await fetch("http://localhost:8080/api/auth/login", {
           method: "POST",
@@ -41,7 +52,7 @@ export async function login(bodyData){
               "border-1 border-blue-600 bg-white text-blue-600 font-bold rounded-sm",
           });
         }
-
+        
         return response;
       } catch (error) {
         toast.error(`Erro de rede: ${error.message}`, {

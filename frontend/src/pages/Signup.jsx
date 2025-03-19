@@ -4,7 +4,7 @@ import { CircleAlert } from "lucide-react";
 import { toast } from "react-toastify";
 
 import Input from "../components/Input";
-import { createAccount } from "../http";
+import { createAccountFunction } from "../http";
 
 
 
@@ -39,7 +39,7 @@ export default function Signup() {
     setMensagemErro("");
 
     try {
-      const response = await createAccount({ nome, email, senha});
+      const response = await createAccountFunction({ nome, email, senha});
 
       if(!response.ok){
         setMensagemErro("Email já cadastrado!");
