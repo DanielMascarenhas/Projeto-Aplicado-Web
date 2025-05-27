@@ -1,12 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../store/AuthContext";
 import { toast } from "react-toastify";
 
 
 
 export default function SaidaMaterial({ fecharModal, atualizarEstoque }) {
-  const navigate = useNavigate();
 
   const { userData } = useAuth();
   const token = userData?.token;
@@ -17,7 +15,7 @@ export default function SaidaMaterial({ fecharModal, atualizarEstoque }) {
   const [materialSelecionado, setMaterialSelecionado] = useState("");
   const [quantidade, setQuantidade] = useState("");
 
-
+  const isAddDisabled = !materialSelecionado || !quantidade;
 
   useEffect(() => {
     fetchMaterials();
@@ -53,7 +51,7 @@ export default function SaidaMaterial({ fecharModal, atualizarEstoque }) {
 
     if (!materialSelecionado || !quantidade) return;
 
-    const material = materials.find(m => m.id === parseInt(materialSelecionado));
+    //const material = materials.find(m => m.id === parseInt(materialSelecionado));
 
     if (!materialSelecionado || materialSelecionado == 0 || !quantidade) return;
 
@@ -97,10 +95,10 @@ export default function SaidaMaterial({ fecharModal, atualizarEstoque }) {
   const handleAddMovimentacao = () => {
     if (!materialSelecionado || !quantidade) return;
 
-    const material = materials.find(m => m.id === parseInt(materialSelecionado));
+    //const material = materials.find(m => m.id === parseInt(materialSelecionado));
 
     const novaMovimentacao = {
-      materialId: materialSelecionado,
+      materialId: Number(materialSelecionado),
       quantidade: parseFloat(quantidade),
     };
 
@@ -115,6 +113,11 @@ export default function SaidaMaterial({ fecharModal, atualizarEstoque }) {
     setMaterialSelecionado("");
     setQuantidade("");
     fecharModal(); // fecha o modal após limpar
+  };
+
+  const removerMovimentacao = (index) => {
+    const novasMovimentacoes = movimentacoes.filter((_, i) => i !== index);
+    setMovimentacoes(novasMovimentacoes);
   };
 
   return (
@@ -142,6 +145,15 @@ export default function SaidaMaterial({ fecharModal, atualizarEstoque }) {
                     <tr key={index} className="border-t">
                       <td className="px-3 py-2">{material?.nome || 'Desconhecido'} {material?.unidade || '-'}</td>
                       <td className="px-3 py-2 text-right">{mov.quantidade}</td>
+                      <td className="px-3 py-2 text-center">
+                        <button
+                          type="button"
+                          className="text-red-500 hover:text-red-700 font-bold cursor-pointer"
+                          onClick={() => removerMovimentacao(index)}
+                        >
+                          ✕
+                        </button>
+                      </td>
                     </tr>
                   );
                 })}
@@ -164,7 +176,7 @@ export default function SaidaMaterial({ fecharModal, atualizarEstoque }) {
               required
               value={materialSelecionado}
               onChange={(e) => setMaterialSelecionado(e.target.value)}>
-              <option value={0}>Selecione um material</option>
+              <option value="">Selecione um material</option>
               {materials.map((material) => (
                 <option key={material.id} value={material.id}>
                   {material.nome} ({material.unidade})
@@ -197,7 +209,11 @@ export default function SaidaMaterial({ fecharModal, atualizarEstoque }) {
           <button
             type="button"
             onClick={handleAddMovimentacao}
-            className="text-blue-600 hover:text-blue-800 cursor-pointer font-medium"
+            title={isAddDisabled ? "Preencha todos os campos para adicionar" : ""}
+            className={`font-medium px-4 py-2 rounded transition ${isAddDisabled
+              ? 'text-gray-400 cursor-not-allowed'
+              : 'text-blue-600 hover:text-blue-800 cursor-pointer'
+              }`}
           >
             + Adicionar mais uma movimentação
           </button>

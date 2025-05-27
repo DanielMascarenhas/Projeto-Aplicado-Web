@@ -1,11 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../store/AuthContext";
 import { toast } from "react-toastify";
 
 
-export default function EntradaMaterial({ fecharModal }) {
-  const navigate = useNavigate();
+export default function EntradaMaterial({ fecharModal, atualizarEstoque }) {
 
   const { userData } = useAuth();
   const token = userData?.token;
@@ -20,6 +18,8 @@ export default function EntradaMaterial({ fecharModal }) {
   useEffect(() => {
     fetchMaterials();
   }, [token]);
+
+  const isAddDisabled = !materialSelecionado || !quantidade || !preco;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -178,12 +178,10 @@ export default function EntradaMaterial({ fecharModal }) {
               Material
             </label>
 
-            <select
-              className="input-field bg-gray-300 mt-3 rounded"
+            <select className="input-field bg-gray-300 mt-3 rounded"
               required
               value={materialSelecionado}
-              onChange={(e) => setMaterialSelecionado(e.target.value)}
-            >
+              onChange={(e) => setMaterialSelecionado(e.target.value)}>
               <option value="">Selecione um material</option>
               {materials.map((material) => (
                 <option key={material.id} value={material.id}>
@@ -234,7 +232,12 @@ export default function EntradaMaterial({ fecharModal }) {
           <button
             type="button"
             onClick={handleAddMovimentacao}
-            className="text-blue-600 hover:text-blue-800 cursor-pointer font-medium"
+            title={isAddDisabled ? "Preencha todos os campos para adicionar" : ""}
+            className={`font-medium px-4 py-2 rounded transition ${isAddDisabled
+                ? 'text-gray-400 cursor-not-allowed'
+                : 'text-blue-600 hover:text-blue-800 cursor-pointer'
+              }`}
+
           >
             + Adicionar mais uma movimentação
           </button>
