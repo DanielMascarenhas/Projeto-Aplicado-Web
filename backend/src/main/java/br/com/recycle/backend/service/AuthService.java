@@ -48,7 +48,8 @@ public class AuthService {
             throw new BadCredentialsException("Credenciais inválidas");
         }
     }
-
+    
+    @Transactional
     public Usuario registrar(RegistroDTO registroDTO) {
 
         if (usuarioRepository.existsByEmail(registroDTO.getEmail())) {

@@ -29,6 +29,12 @@ public class EntradaController {
             summary = "Registrar uma ou mais entradas de materiais",
             description = "Registra uma nova entrada ou uma lista de entradas no estoque para o Usuário autenticado"
     )
+    
+    @ApiResponse(
+    responseCode = "201",
+    description = "Entradas registradas com sucesso",
+    content = @Content(schema = @Schema(implementation = EstoqueResponseDTO.class))
+    )
     @PostMapping
     public ResponseEntity<List<EstoqueResponseDTO>> registrarEntrada(
             @RequestBody List<EntradaRequestDTO> entradas,
@@ -41,6 +47,12 @@ public class EntradaController {
     @Operation(
             summary = "Listar todas as entradas do usuário",
             description = "Retorna uma lista com todas as entradas registradas pelo usuário autenticado"
+    )
+
+    @ApiResponse(
+    responseCode = "200",
+    description = "Entradas listadas com sucesso",
+    content = @Content(schema = @Schema(implementation = EntradaResponseDTO.class))
     )
     @GetMapping
     public ResponseEntity<List<EntradaResponseDTO>> listarEntradas(HttpServletRequest request) {

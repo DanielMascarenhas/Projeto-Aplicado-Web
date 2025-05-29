@@ -36,7 +36,8 @@ public class MaterialService {
         this.entradaRepository = entradaRepository;
         this.saidaRepository = saidaRepository;
     }
-
+    
+    @Transactional
     public MaterialResponseDTO criar(MaterialRequestDTO dto, Long usuarioId) {
 
         if (materialRepository.existsByNomeAndUsuarioId(dto.getNome(), usuarioId)) {
@@ -70,6 +71,7 @@ public class MaterialService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public MaterialResponseDTO atualizar(Long id, MaterialRequestDTO dto, Long usuarioId) {
         Material material = materialRepository.findByIdAndUsuarioId(id, usuarioId)
                 .orElseThrow(() -> new RuntimeException("Material não encontrado"));
