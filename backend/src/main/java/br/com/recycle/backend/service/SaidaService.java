@@ -47,6 +47,10 @@ public class SaidaService {
         estoque.setValorTotal(novoValorTotal);
         estoqueRepository.save(estoque);
 
+        if (novaQuantidade==0){
+            estoqueRepository.delete(estoque);
+        };
+
         Saida saida = new Saida();
         saida.setQuantidade(dto.getQuantidade());
         saida.setUsuarioId(usuarioId);
