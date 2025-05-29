@@ -59,13 +59,14 @@ public class EntradaController {
         Long usuarioId = (Long) request.getAttribute("usuarioId");
         List<EstoqueResponseDTO> resultados = entradaService.registrarEntradas(entradas, usuarioId);
         return ResponseEntity.status(HttpStatus.CREATED).body(resultados);
+        
     }
 
     @Operation(
             summary = "Listar todas as entradas do usuário",
             description = "Retorna uma lista com todas as entradas registradas pelo usuário autenticado"
     )
-    
+
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
